@@ -1,2 +1,2 @@
 # SelenideDemo
-Selenide Framework to autoamte mobile and Desktop App
+Selenide Framework to automate mobile and Desktop App
