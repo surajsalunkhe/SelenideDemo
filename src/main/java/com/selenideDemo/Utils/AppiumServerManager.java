@@ -38,6 +38,7 @@ public class AppiumServerManager {
             throw new Exception("Unable to start Appium server, '" + os + "' OS is not yet supported");
         }
         startAppiumProcess();
+        Thread.sleep(5000);
     }
 
     private static void startAppiumProcess() {

@@ -47,11 +47,11 @@ public class IOSDriverManager {
         options.setCapability("autoGrantPermissions", true);
         return options;
     }
-    public void quitDriver() {
+    /*public void quitDriver() {
         if (driver != null) {
             driver.quit();
             driver = null;
             logger.info("iOS Driver quit successfully.");
         }
-    }
+    }*/
 }

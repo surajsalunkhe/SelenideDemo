@@ -21,7 +21,8 @@ public class AndroidDriverManager {
         if (driver == null) {
             try {
                 UiAutomator2Options options = getUIAutomator2Options();
-                options.setApp(APP_PATH+PropertiesFileManager.getPropertyValue("ANDROID_APP_NAME"));
+                String fullAppPath=APP_PATH+PropertiesFileManager.getPropertyValue("ANDROID_APP_NAME");
+                options.setApp(fullAppPath);
                 driver = new AndroidDriver(new URL("http://" + HOSTNAME + ":" + PORT_FOR_ANDROID),options);
                 logger.info("Android Driver initialized successfully.");
             } catch (MalformedURLException e) {
@@ -49,16 +50,19 @@ public class AndroidDriverManager {
         options.setDeviceName(PropertiesFileManager.getPropertyValue("ANDROID_EMULATOR"));
         options.setNoReset(true);
         options.setFullReset(false);
+        options.setPlatformVersion(PropertiesFileManager.getPropertyValue("PLATFORM_VERSION"));
+        options.setAppPackage(PropertiesFileManager.getPropertyValue("ANDROID_APP_PACKAGE"));
+        options.setAppActivity(PropertiesFileManager.getPropertyValue("ANDROID_APP_ACTIVITY"));
         options.setCapability("uiautomator2ServerInstallTimeout", 60000);
         options.setCapability("adbExecTimeout", 30000);
         options.setCapability("autoGrantPermissions", true);
         return options;
     }
-    public void quitDriver() {
+    /*public void quitDriver() {
         if (driver != null) {
             driver.quit();
             driver = null;
             logger.info("Android Driver quit successfully.");
         }
-    }
+    }*/
 }
