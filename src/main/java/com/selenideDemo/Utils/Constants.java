@@ -12,7 +12,5 @@ public class Constants {
 	public static final String PORT_FOR_ANDROID = "4723";
 	public static final String PORT_FOR_IOS = "4724";
 	public static final String HOSTNAME = "127.0.0.1";
-	public static final String APP_PATH = "./src/test/resources/environment/"+getEnvironmentName()+"/app/";
-
-
+	public static final String APP_PATH = System.getProperty("user.dir")+"\\src\\test\\resources\\environment\\"+getEnvironmentName()+"\\app\\";
 }
