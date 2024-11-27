@@ -4,6 +4,7 @@ import com.selenideDemo.Utils.PropertiesFileManager;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.options.UiAutomator2Options;
 import io.appium.java_client.remote.AutomationName;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.net.MalformedURLException;
@@ -15,15 +16,18 @@ public class AndroidDriverManager {
 
     private static final Logger logger = LoggerFactory.getLogger(AndroidDriverManager.class);
     private static AndroidDriver driver;
+    static String androidApplicationPath =APP_PATH+PropertiesFileManager.getPropertyValue("ANDROID_APP_NAME");
 
     // Method to create the AndroidDriver
     public static AndroidDriver createDriver() {
         if (driver == null) {
             try {
-                UiAutomator2Options options = getUIAutomator2Options();
-                String fullAppPath=APP_PATH+PropertiesFileManager.getPropertyValue("ANDROID_APP_NAME");
-                options.setApp(fullAppPath);
-                driver = new AndroidDriver(new URL("http://" + HOSTNAME + ":" + PORT_FOR_ANDROID),options);
+                //UiAutomator2Options options = getUIAutomator2Options();
+                //String androidApplicationPath=APP_PATH+PropertiesFileManager.getPropertyValue("ANDROID_APP_NAME");
+                //options.setApp(androidApplicationPath);
+               // driver = new AndroidDriver(new URL("http://" + HOSTNAME + ":" + PORT_FOR_ANDROID),options);
+                DesiredCapabilities desiredCapabilities = buildAndroidCapabilities();
+                driver = new AndroidDriver(new URL("http://" + HOSTNAME + ":" + PORT_FOR_ANDROID), desiredCapabilities);
                 logger.info("Android Driver initialized successfully.");
             } catch (MalformedURLException e) {
                 logger.error("Invalid Appium server URL", e);
@@ -58,11 +62,25 @@ public class AndroidDriverManager {
         options.setCapability("autoGrantPermissions", true);
         return options;
     }
-    /*public void quitDriver() {
+    public static void quitDriver() {
         if (driver != null) {
             driver.quit();
             driver = null;
             logger.info("Android Driver quit successfully.");
         }
-    }*/
+    }
+    private static DesiredCapabilities buildAndroidCapabilities() {
+        DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
+        desiredCapabilities.setCapability("appium:deviceName", PropertiesFileManager.getPropertyValue("AndroidEmulator"));
+        desiredCapabilities.setCapability("platformName", "Android");
+        desiredCapabilities.setCapability("appium:app", androidApplicationPath);
+        desiredCapabilities.setCapability("appium:appPackage", PropertiesFileManager.getPropertyValue("ANDROID_APP_PACKAGE"));
+        desiredCapabilities.setCapability("appium:appActivity", PropertiesFileManager.getPropertyValue("ANDROID_APP_ACTIVITY"));
+        desiredCapabilities.setCapability("appium:automationName", "uiautomator2");
+        desiredCapabilities.setCapability("appium:noReset", false);
+        desiredCapabilities.setCapability("appium:ensureWebviewsHavePages", true);
+        desiredCapabilities.setCapability("appium:nativeWebScreenshot", true);
+        desiredCapabilities.setCapability("appium:newCommandTimeout", 3600);
+        return desiredCapabilities;
+    }
 }

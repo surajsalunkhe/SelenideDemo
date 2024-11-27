@@ -20,28 +20,27 @@ public abstract class BaseTest {
     protected static ExtentReports extentReports;
     protected static ExtentTest extentTest;
     protected static WebDriver driver;
-
+    static String platform = System.getProperty("platform", "android");  // Default to Android if not specified
     private static final Logger logger = LoggerFactory.getLogger(BaseTest.class);
 
 
     @BeforeAll
     public static void globalSetup() {
         String system = System.getProperty("os.name").toLowerCase();
-        try {
-            AppiumServerManager.startAppiumServer(system);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         logger.info("Appium server started for all tests.");
         ExtentSparkReporter sparkReporter = new ExtentSparkReporter("target/extent-reports/extentReport.html");
         extentReports = new ExtentReports();
         extentReports.attachReporter(sparkReporter);
         logger.info("Extent Report initialized");
+        try {
+            AppiumServerManager.startAppiumServer(system);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @BeforeEach
     public void setUp() {
-        String platform = System.getProperty("platform", "android");  // Default to Android if not specified
         logger.info("Starting test on platform: " + platform);
         try {
             if ("android".equalsIgnoreCase(platform)) {
@@ -65,9 +64,10 @@ public abstract class BaseTest {
 
     @AfterEach
     public void tearDown() {
-        if (driver != null) {
-            driver.quit();
-            logger.info("Driver closed successfully");
+        if ("android".equalsIgnoreCase(platform)) {
+            AndroidDriverManager.quitDriver();
+        } else if ("ios".equalsIgnoreCase(platform)) {
+            IOSDriverManager.quitDriver();
         }
         if (extentReports != null) {
             extentReports.flush();
