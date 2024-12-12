@@ -8,6 +8,7 @@ import com.codeborne.selenide.WebDriverRunner;
 import com.selenideDemo.Base.AndroidDriverManager;
 import com.selenideDemo.Base.IOSDriverManager;
 import com.selenideDemo.Utils.AppiumServerManager;
+import com.selenideDemo.report_manager.ExtentTestManager;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -23,7 +24,6 @@ public abstract class BaseTest {
     static String platform = System.getProperty("platform", "android");  // Default to Android if not specified
     private static final Logger logger = LoggerFactory.getLogger(BaseTest.class);
 
-
     @BeforeAll
     public static void globalSetup() {
         String system = System.getProperty("os.name").toLowerCase();
@@ -33,7 +33,8 @@ public abstract class BaseTest {
         extentReports.attachReporter(sparkReporter);
         logger.info("Extent Report initialized");
         try {
-            AppiumServerManager.startAppiumServer(system);
+            AppiumServerManager appiumServerManager = new AppiumServerManager();
+            appiumServerManager.startServer();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -54,7 +55,8 @@ public abstract class BaseTest {
             // Set Selenide to use the Appium driver
             WebDriverRunner.setWebDriver(driver);
             Configuration.timeout = 10000;  // Set default timeout for Selenide actions
-            extentTest = extentReports.createTest(getClass().getSimpleName());
+            //extentTest = extentReports.createTest(getClass().getSimpleName());
+            ExtentTestManager.startTest(getClass().getSimpleName(), "Test on platform: " + platform);
             logger.info("Driver initialized and Selenide configured for: " + platform);
         } catch (Exception e) {
             logger.error("Error initializing driver", e);
@@ -74,10 +76,12 @@ public abstract class BaseTest {
             logger.info("Extent Report flushed");
         }
     }
+
     @AfterAll
     public static void globalTearDown() {
         // Stop Appium Server after all tests
-        AppiumServerManager.stopAppiumServer();
+        AppiumServerManager appiumServerManager = new AppiumServerManager();
+        appiumServerManager.stopServer();
         logger.info("Appium server stopped after all tests.");
     }
 }
