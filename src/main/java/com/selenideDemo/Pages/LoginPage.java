@@ -20,12 +20,12 @@ public class LoginPage {
         WebDriverRunner.setWebDriver(driver);
     }
 
-    /*public HomePage login(String username, String password) {
+    public void login(String username, String password) {
         usernameField.setValue(username);
         passwordField.setValue(password);
         loginButton.click();
-        return new HomePage(driver);
-    }*/
+        //return new HomePage(driver);
+    }
     public LoginPage enterUsername(String username) {
         usernameField.should(appear).setValue(username);
         return this;

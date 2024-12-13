@@ -6,20 +6,23 @@ import com.codeborne.selenide.WebDriverRunner;
 import com.selenideDemo.Base.AndroidDriverManager;
 import com.selenideDemo.Base.IOSDriverManager;
 import com.selenideDemo.Utils.AppiumServerManager;
+import com.selenideDemo.Utils.DependencyInjector;
 import com.selenideDemo.report_manager.ExtentManager;
 import com.selenideDemo.report_manager.ExtentTestManager;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.io.FileHandler;
+import org.picocontainer.MutablePicoContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.File;
 
 public abstract class BaseTest {
     protected static ExtentReports extentReports;
     protected static WebDriver driver;
+    protected MutablePicoContainer container;
+    protected DependencyInjector injector;
     static String platform = System.getProperty("platform", "android");  // Default to Android if not specified
     private static final Logger logger = LoggerFactory.getLogger(BaseTest.class);
 
@@ -52,7 +55,7 @@ public abstract class BaseTest {
             } else {
                 throw new IllegalArgumentException("Invalid platform specified: " + platform);
             }
-
+            injector = new DependencyInjector(driver);
             // Set Selenide to use the Appium driver
             WebDriverRunner.setWebDriver(driver);
             Configuration.timeout = 10000;  // Set default timeout for Selenide actions
