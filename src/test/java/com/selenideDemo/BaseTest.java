@@ -5,6 +5,10 @@ import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.WebDriverRunner;
 import com.selenideDemo.Base.AndroidDriverManager;
 import com.selenideDemo.Base.IOSDriverManager;
+import com.selenideDemo.Pages.HomePage;
+import com.selenideDemo.Pages.LoginPage;
+import com.selenideDemo.Pages.SideMenu;
+import com.selenideDemo.Pages.WebViewPage;
 import com.selenideDemo.Utils.AppiumServerManager;
 import com.selenideDemo.Utils.DependencyInjector;
 import com.selenideDemo.report_manager.ExtentManager;
@@ -21,10 +25,13 @@ import java.io.File;
 public abstract class BaseTest {
     protected static ExtentReports extentReports;
     protected static WebDriver driver;
-    protected MutablePicoContainer container;
     protected DependencyInjector injector;
     static String platform = System.getProperty("platform", "android");  // Default to Android if not specified
     private static final Logger logger = LoggerFactory.getLogger(BaseTest.class);
+    protected LoginPage loginPage;
+    protected HomePage homePage;
+    protected SideMenu sideMenu;
+    protected WebViewPage webViewPage;
 
     @BeforeAll
     public static void globalSetup() {
@@ -56,6 +63,7 @@ public abstract class BaseTest {
                 throw new IllegalArgumentException("Invalid platform specified: " + platform);
             }
             injector = new DependencyInjector(driver);
+            injectEachPage();
             // Set Selenide to use the Appium driver
             WebDriverRunner.setWebDriver(driver);
             Configuration.timeout = 10000;  // Set default timeout for Selenide actions
@@ -67,6 +75,12 @@ public abstract class BaseTest {
             logger.error("Error initializing driver", e);
             throw new RuntimeException(e);
         }
+    }
+    public void injectEachPage(){
+        loginPage = injector.getInstance(LoginPage.class);
+        homePage = injector.getInstance(HomePage.class);
+        sideMenu = injector.getInstance(SideMenu.class);
+        webViewPage = injector.getInstance(WebViewPage.class);
     }
     @AfterEach
     public void tearDown() {

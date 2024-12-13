@@ -36,8 +36,8 @@ public class LoginPage {
         return this;
     }
 
-    public HomePage clickLoginButton() {
+    public void clickLoginButton() {
         loginButton.should(appear).click();
-        return new HomePage(driver);
+        //return new HomePage(driver);
     }
 }

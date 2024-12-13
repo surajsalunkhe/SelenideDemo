@@ -39,10 +39,10 @@ public class HomePage {
         filterIcon.shouldBe(visible);
         filterIcon.click();
     }
-    public SideMenu clickOnMenuIcon(){
+    public void clickOnMenuIcon(){
         assertTrue(menuIcon.isDisplayed(),"Menu Icon is not displayed");
         menuIcon.click();
         ExtentTestManager.getTest().log(Status.PASS, "Menu Icon is displayed");
-        return new SideMenu(driver);
+        //return new SideMenu(driver);
     }
 }

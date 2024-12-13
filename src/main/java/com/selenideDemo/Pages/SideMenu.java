@@ -35,12 +35,12 @@ public class SideMenu {
         return new HomePage(driver);
     }
 
-    public WebViewPage clickOnWebViewLink(){
+    public void clickOnWebViewLink(){
         webView.shouldBe(interactable, Duration.ofSeconds(5));
         assertTrue(webView.isDisplayed(),"Side Menu Web View link is not displayed");
         webView.click();
         ExtentTestManager.getTest().log(Status.PASS, "Clicked on All Item link is displayed");
-        return new WebViewPage(driver);
+        //return new WebViewPage(driver);
     }
 
 }
