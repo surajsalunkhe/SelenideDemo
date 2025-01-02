@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ExtentTestManager {
-    private static final Map<Long, ExtentTest> extentTestMap = new ConcurrentHashMap<>();
+    private static final Map<Long, ExtentTest> extentTestMap = new HashMap<>();
     private static final ExtentReports extent = ExtentManager.createExtentReports();
 
     public static synchronized ExtentTest getTest() {
